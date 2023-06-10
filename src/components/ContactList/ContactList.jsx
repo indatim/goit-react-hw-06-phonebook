@@ -1,6 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import { FaTimesCircle } from 'react-icons/fa';
 
 import {
@@ -10,28 +7,29 @@ import {
   ContactListButton,
 } from './ContactList.styled';
 
-export default function ContactList({ contacts, onDeleteContact }) {
-  return (
-  <ContactListContainer>
-    {contacts.map(({ id, name, number }) => (
-      <ContactListItem key={id}>
-        <ContactListText>{name}:</ContactListText>
-        <ContactListText>{number}</ContactListText>
-        <ContactListButton type="button" onClick={() => onDeleteContact(id)}>
-          <FaTimesCircle
-            style={{ color: 'red', marginRight: '5' }}
-          /> Delete
-        </ContactListButton>
-      </ContactListItem>
-    ))}
-  </ContactListContainer>
-);
-}
+import { deleteContact } from '../../redux/contactsSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectFilteredContacts } from '../../redux/selectors';
+
+export const ContactList = () => {
+
+  const contacts = useSelector(selectFilteredContacts);
+  const dispatch = useDispatch();
   
-ContactList.propTypes = {
-  contacts: PropTypes.array,
-  id: PropTypes.string,
-  name: PropTypes.string,
-  number: PropTypes.string,
-  onDeleteContact: PropTypes.func.isRequired,
+  return (
+    <ContactListContainer>
+      {contacts.map(({ id, name, number }) => (
+        <ContactListItem key={id}>
+          <ContactListText>{name}:</ContactListText>
+          <ContactListText>{number}</ContactListText>
+          <ContactListButton
+            type="button"
+            onClick={() => dispatch(deleteContact(id))}
+          >
+            <FaTimesCircle style={{ color: 'red', marginRight: '5' }} /> Delete
+          </ContactListButton>
+        </ContactListItem>
+      ))}
+    </ContactListContainer>
+  );
 };
