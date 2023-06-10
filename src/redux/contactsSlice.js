@@ -62,10 +62,9 @@ const contactsSlice = createSlice({
     },
 
     deleteContact(state, action) {
-      const index = state.contacts.findIndex(
-        contact => contact.id === action.payload
+      state.contacts = state.contacts.filter(
+        contact => contact.id !== action.payload
       );
-      state.contacts.splice(index, 1);
       Report.success('Success', `Contact was deleted!`, 'Okay');
     },
   },
